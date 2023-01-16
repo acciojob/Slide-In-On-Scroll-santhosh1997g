@@ -1,24 +1,34 @@
-// Your JS code here.
-<script
-     // Get all the images on the page
-    const images = document.querySelectorAll(".image");
-  
-    // Function to add the active classname to the image when scrolled to
-    function addActiveClassOnScroll() {
-        images.forEach(image => {
-            // Get the position of the image on the page
-            const imagePosition = image.getBoundingClientRect().top;
-            // Check if the position of the image is within the viewable area of the screen
-            const screenPosition = window.innerHeight / 1.3;
-            if (imagePosition < screenPosition) {
-                image.classList.add("active");
-            }
-        });
-    }
-    // Debounce the addActiveClassOnScroll function
-    const debouncedAddActiveClassOnScroll = debounce(addActiveClassOnScroll, 20);
+function debounce(func, wait = 20, immediate = true) {
+    var timeout;
+    return function() {
+      var context = this, args = arguments;
+      var later = function() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+      var callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args);
+    };
+  }
 
-    // Listen for scroll events on the window and call the debounced function
-    window.addEventListener("scroll", debouncedAddActiveClassOnScroll);
+  const sliderImages = document.querySelectorAll('.slide-in');
 
-  </script>
+  const checkSlide = (e) => {
+    sliderImages.forEach(slideImage => {
+        // half way through image
+        const slideInAt = (window.scrollY + window.innerHeight) - slideImage.height / 2;
+        // bottom of the image
+        const imageBottom = slideImage.offsetTop + slideImage.height;
+        const isHalfShown = slideInAt > slideImage.offsetTop;
+        const isNotScrolledPast = window.scrollY < imageBottom;
+        if (isHalfShown && isNotScrolledPast) {
+            slideImage.classList.add('active');
+        } else {
+            slideImage.classList.remove('active');
+        }
+    })
+  }
+
+  window.addEventListener('scroll', debounce(checkSlide))
