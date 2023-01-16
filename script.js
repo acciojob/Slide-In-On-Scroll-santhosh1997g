@@ -1,3 +1,5 @@
+let images= document.querySelectorAll("img")
+
 function debounce(func, wait = 20, immediate = true) {
     var timeout;
     return function() {
@@ -11,24 +13,22 @@ function debounce(func, wait = 20, immediate = true) {
       timeout = setTimeout(later, wait);
       if (callNow) func.apply(context, args);
     };
-  }
+  };
 
-  const sliderImages = document.querySelectorAll('.slide-in');
+function SlideInHandler(e){
+    images.forEach(image => {
+        //find mid-image postion
+        let DisplayImage = (window.scrollY + window.innerHeight) - image.height/2;
+        let endImagePosition = image.offsetTop+image.height;
 
-  const checkSlide = (e) => {
-    sliderImages.forEach(slideImage => {
-        // half way through image
-        const slideInAt = (window.scrollY + window.innerHeight) - slideImage.height / 2;
-        // bottom of the image
-        const imageBottom = slideImage.offsetTop + slideImage.height;
-        const isHalfShown = slideInAt > slideImage.offsetTop;
-        const isNotScrolledPast = window.scrollY < imageBottom;
-        if (isHalfShown && isNotScrolledPast) {
-            slideImage.classList.add('active');
-        } else {
-            slideImage.classList.remove('active');
-        }
-    })
-  }
+        let showImage = image.offsetTop < DisplayImage;
+        let notScrolledPast = window.scrollY < endImagePosition
 
-  window.addEventListener('scroll', debounce(checkSlide))
+        if(showImage && notScrolledPast)
+            image.classList.add("active");
+        else
+            image.classList.remove("active");
+    });
+}
+window.addEventListener("scroll", debounce(SlideInHandler))
+
