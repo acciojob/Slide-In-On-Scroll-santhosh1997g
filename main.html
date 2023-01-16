@@ -57,21 +57,7 @@
         if (callNow) func.apply(context, args);
       };
     }
-    const images = document.querySelectorAll(".image");
   
-    function addActiveClassOnScroll() {
-        images.forEach(image => {
-            const imagePosition = image.getBoundingClientRect().top;
-            const screenPosition = window.innerHeight / 1.3;
-            if (imagePosition < screenPosition) {
-                image.classList.add("active");
-            }
-        });
-    }
-    const debouncedAddActiveClassOnScroll = debounce(addActiveClassOnScroll, 20);
-
-    window.addEventListener("scroll", debouncedAddActiveClassOnScroll);
-
   </script>
 
 
