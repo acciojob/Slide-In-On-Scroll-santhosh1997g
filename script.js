@@ -1,34 +1,21 @@
-let images= document.querySelectorAll("img")
+// This file is not to be modified. Please ignore this.
+// We will understand all of this later in the course.
+// DO NOT MODIFY THIS FILE
 
-function debounce(func, wait = 20, immediate = true) {
-    var timeout;
-    return function() {
-      var context = this, args = arguments;
-      var later = function() {
-        timeout = null;
-        if (!immediate) func.apply(context, args);
-      };
-      var callNow = immediate && !timeout;
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-      if (callNow) func.apply(context, args);
-    };
-  };
+const express = require('express');
+const path = require('path');
 
-function SlideInHandler(e){
-    images.forEach(image => {
-        //find mid-image postion
-        let DisplayImage = (window.scrollY + window.innerHeight) - image.height/2;
-        let endImagePosition = image.offsetTop+image.height;
+const app = express();
 
-        let showImage = image.offsetTop < DisplayImage;
-        let notScrolledPast = window.scrollY < endImagePosition
+app.use(express.static(__dirname))
 
-        if(showImage && notScrolledPast)
-            image.classList.add("active");
-        else
-            image.classList.remove("active");
-    });
-}
-window.addEventListener("scroll", debounce(SlideInHandler))
-
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname + '/main.html'));
+});
+//your code here
+app.post('/add', (req, res) => {
+  const {a,b} = req.body;
+  res.status(200).send(a+b);
+  // res.sendFile(path.join(__dirname + '/main.html'));
+});
+module.exports = app;
